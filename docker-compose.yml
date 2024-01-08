@@ -1,0 +1,69 @@
+version: "3.7"
+
+networks:
+  docker.network:
+    driver: bridge
+
+services:
+  php:
+    build: ./docker/php
+    restart: unless-stopped
+    container_name: docker.php
+    tty: true
+    depends_on:
+      - mysql
+    networks:
+      - docker.network
+    volumes:
+      - .:/var/www
+
+  apache:
+    build: ./docker/apache
+    restart: unless-stopped
+    container_name: docker.apache
+    tty: true
+    depends_on:
+      - php
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - docker.network
+    volumes:
+      - ./html/doorbird.com:/var/www/html/
+      - ./docker/apache/ssl/mycert.crt:/etc/ssl/certs/mycert.crt
+      - ./docker/apache/ssl/mycert.key:/etc/ssl/private/mycert.key
+
+  mysql:
+    image: arm64v8/mysql:latest
+    platform: linux/arm64
+    restart: unless-stopped
+    container_name: docker.mysql
+    tty: true
+    ports:
+      - "3306:3306"
+    networks:
+      - docker.network
+    volumes:
+      - "./docker/mysql/dbdata:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mysql}
+      MYSQL_USER: ${MYSQL_USER:-mysql}
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: docker.phpmyadmin
+    tty: true
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+    networks:
+      - docker.network
+    environment:
+      PMA_HOST: mysql
+      PMA_ARBITRARY: 1
+      PMA_PORT: 3306
+
+  
