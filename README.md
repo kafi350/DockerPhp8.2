@@ -1,4 +1,4 @@
-# Docker with PHP 8.0 and later versions for MAC with M1/M2
+# Docker with PHP 8.2 and later versions for MAC with M1/M2
 
 This repository is consisting of a docker images of PHP version 8.2 (you can change it in the docker-compose file),
 Mysql latest, Apache and phpmyAdmin
