@@ -30,9 +30,9 @@ services:
     networks:
       - docker.network
     volumes:
-      - ./html/doorbird.com:/var/www/html/
-      - ./docker/apache/ssl/mycert.crt:/etc/ssl/certs/mycert.crt
-      - ./docker/apache/ssl/mycert.key:/etc/ssl/private/mycert.key
+      - ./html/your_file:/var/www/html/
+      - ./docker/apache/ssl/your_certificate.crt:/etc/ssl/certs/mycert.crt
+      - ./docker/apache/ssl/your_key.key:/etc/ssl/private/mycert.key
 
   mysql:
     image: arm64v8/mysql:latest
@@ -65,5 +65,20 @@ services:
       PMA_HOST: mysql
       PMA_ARBITRARY: 1
       PMA_PORT: 3306
+  grafana:
+    image: grafana/grafana:latest
+    container_name: docker.grafana
+    depends_on:
+      - mysql
+    ports:
+      - "3000:3000"
+    networks:
+      - docker.network
+    volumes:
+      - ./docker/graphana_data:/var/lib/grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      
 
   
