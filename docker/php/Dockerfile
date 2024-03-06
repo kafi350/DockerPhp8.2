@@ -2,7 +2,7 @@
 FROM php:8.2.12-fpm-alpine3.18
 
 # Labels
-LABEL creatorName="Abdullahil Kafi"
+LABEL creatorName="Abdullahil Kafi, Masoud Mustamandi"
 LABEL creatorEmail="kafiabdullahil96@gmail.com"
 
 # Set timezone
@@ -90,7 +90,7 @@ COPY ./entrypoint /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
 
 # Workdir
-ENV WORKDIR=/var/www/html/doorbird.com
+ENV WORKDIR=/var/www/html/your_directory
 RUN mkdir -p ${WORKDIR}
 WORKDIR ${WORKDIR}
 
